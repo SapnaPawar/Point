@@ -1,0 +1,22 @@
+In Attribute Part:
+default['Info']['data_bag_name'] = 'DataBagNew'
+default['Info']['data_bag_itemName'] = '1'
+
+
+In Recipe:default.rb
+
+data_bag_name = node['Info']['data_bag_name']
+data_bag_ItemName = node['Info']['data_bag_itemName']
+data_bag = Chef::DataBagItem.load("#{data_bag_name}", "#{data_bag_ItemName}")
+username = data_bag['Database']
+
+template "/tmp/usercreate_#{username}.sql" do
+  source "create.sql.erb"
+  mode "0644"
+  owner "oracle"
+  group "users"
+  variables(
+          :user_name => username
+          )
+  end
+
